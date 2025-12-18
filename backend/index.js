@@ -6,7 +6,9 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware to read JSON - CORS Must Come First
-app.use(cors());
+app.use(cors({
+  origin: "https://soap-notes-app.vercel.app/"
+}));
 app.use(express.json());
 
 const pool = new Pool({

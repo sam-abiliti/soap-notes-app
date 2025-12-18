@@ -11,36 +11,39 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await fetch("https://soap-notes-app.onrender.com/soap-notes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        subjective,
-        objective,
-        assessment,
-        plan,
-        billingAmount: Number(billingAmount)
-      })
-    });
+    try {
+      const response = await fetch("https://soap-notes-api.onrender.com/soap-notes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          subjective,
+          objective,
+          assessment,
+          plan,
+          billingAmount: Number(billingAmount)
+        })
+      });
 
-    if (response.ok) {
-      setMessage("SOAP note saved successfully");
-      setSubjective("");
-      setObjective("");
-      setAssessment("");
-      setPlan("");
-      setBillingAmount("");
-    } else {
-      setMessage("Error saving SOAP note");
+      if (response.ok) {
+        setMessage("SOAP note saved successfully");
+        setSubjective("");
+        setObjective("");
+        setAssessment("");
+        setPlan("");
+        setBillingAmount("");
+      } else {
+        const errData = await response.json();
+        setMessage("Error saving SOAP note: " + (errData.error || "Unknown"));
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage("Network or server error. Check backend URL and CORS.");
     }
   };
 
   return (
     <div style={{ maxWidth: "600px", margin: "40px auto" }}>
       <h2>SOAP Notes Entry</h2>
-
       <form onSubmit={handleSubmit}>
         <label>Subjective</label>
         <textarea value={subjective} onChange={e => setSubjective(e.target.value)} />

@@ -5,27 +5,22 @@ const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware to read JSON - CORS Must Come First
+// CORS must come before routes
 app.use(cors({
-  origin: "https://soap-notes-app.vercel.app/"
+  origin: "https://soap-notes-app.vercel.app"
 }));
+app.options("*", cors());
 app.use(express.json());
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: "postgresql://soap_notes_db_user:IT6opTYVSYGwbjevirP34XjrfgKvcTSb@dpg-d51vspffte5s73aebv00-a.virginia-postgres.render.com/soap_notes_db",
   ssl: { rejectUnauthorized: false }
 });
 
-// Temp Storage
-let soapNotes = [];
-let currentId = 1;
-
 // Test route
-app.get("/", (req, res) => {
-  res.send("SOAP Notes API is running");
-});
+app.get("/", (req, res) => res.send("SOAP Notes API is running"));
 
-//Post SOAP Note
+// POST /soap-notes
 app.post("/soap-notes", async (req, res) => {
   const { subjective, objective, assessment, plan, billingAmount } = req.body;
 
@@ -42,29 +37,22 @@ app.post("/soap-notes", async (req, res) => {
       [subjective, objective, assessment, plan, billingAmount]
     );
 
-    res.status(201).json({
-      success: true,
-      data: result.rows[0]
-    });
+    res.status(201).json({ success: true, data: result.rows[0] });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Database error" });
   }
 });
 
-// Get SOAP Notes - This Must Exist
+// GET /soap-notes
 app.get("/soap-notes", async (req, res) => {
   try {
-    const result = await pool.query(
-      "SELECT * FROM soap_notes ORDER BY created_at DESC"
-    );
+    const result = await pool.query("SELECT * FROM soap_notes ORDER BY created_at DESC");
     res.json(result.rows);
   } catch (error) {
     res.status(500).json({ error: "Database error" });
   }
 });
 
-// Start server - This Must be Last
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+// Start server
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

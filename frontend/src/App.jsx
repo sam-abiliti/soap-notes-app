@@ -11,7 +11,7 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await fetch("https://soap-notes-app.onrender.com/soap-notes-app", {
+    const response = await fetch("https://soap-notes-app.onrender.com/soap-notes", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

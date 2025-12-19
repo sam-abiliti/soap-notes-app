@@ -12,7 +12,7 @@ function App() {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://soap-notes-api.onrender.com/soap-notes", {
+      const response = await fetch("https://soap-notes-app.onrender.com/soap-notes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

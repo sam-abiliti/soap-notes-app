@@ -44,13 +44,13 @@ app.post("/soap-notes", async (req, res) => {
   }
 });
 
-// GET /soap-notes
 app.get("/soap-notes", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM soap_notes ORDER BY created_at DESC");
+    const result = await pool.query("SELECT * FROM soap_notes");
     res.json(result.rows);
   } catch (error) {
-    res.status(500).json({ error: "Database error" });
+    console.error("DB ERROR:", error.message);
+    res.status(500).json({ error: error.message });
   }
 });
 

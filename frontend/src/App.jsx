@@ -41,36 +41,80 @@ function App() {
     }
   };
 
-  return (
-    <div style={{ maxWidth: "600px", margin: "40px auto" }}>
-      <h2>SOAP Notes Entry</h2>
-      <form onSubmit={handleSubmit}>
-        <label>Subjective</label>
-        <textarea value={subjective} onChange={e => setSubjective(e.target.value)} />
+return (
+  <div style={{
+    maxWidth: "700px",
+    margin: "40px auto",
+    padding: "30px",
+    border: "1px solid #ddd",
+    borderRadius: "8px",
+    fontFamily: "Arial, sans-serif"
+  }}>
+    <h2 style={{ marginBottom: "20px" }}>SOAP Notes Entry</h2>
 
-        <label>Objective</label>
-        <textarea value={objective} onChange={e => setObjective(e.target.value)} />
+    <form onSubmit={handleSubmit}>
+      {[
+        ["Subjective", subjective, setSubjective],
+        ["Objective", objective, setObjective],
+        ["Assessment", assessment, setAssessment],
+        ["Plan", plan, setPlan]
+      ].map(([label, value, setter]) => (
+        <div key={label} style={{ marginBottom: "16px" }}>
+          <label style={{ fontWeight: "bold" }}>{label}</label>
+          <textarea
+            value={value}
+            onChange={e => setter(e.target.value)}
+            rows={4}
+            style={{
+              width: "100%",
+              marginTop: "6px",
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc"
+            }}
+          />
+        </div>
+      ))}
 
-        <label>Assessment</label>
-        <textarea value={assessment} onChange={e => setAssessment(e.target.value)} />
-
-        <label>Plan</label>
-        <textarea value={plan} onChange={e => setPlan(e.target.value)} />
-
-        <label>Billing Amount ($)</label>
+      <div style={{ marginBottom: "20px" }}>
+        <label style={{ fontWeight: "bold" }}>Billing Amount ($)</label>
         <input
           type="number"
           value={billingAmount}
           onChange={e => setBillingAmount(e.target.value)}
+          style={{
+            width: "100%",
+            marginTop: "6px",
+            padding: "8px",
+            borderRadius: "4px",
+            border: "1px solid #ccc"
+          }}
         />
+      </div>
 
-        <br /><br />
-        <button type="submit">Save SOAP Note</button>
-      </form>
+      <button
+        type="submit"
+        style={{
+          backgroundColor: "#2563eb",
+          color: "#fff",
+          padding: "10px 16px",
+          border: "none",
+          borderRadius: "6px",
+          cursor: "pointer",
+          fontSize: "16px"
+        }}
+      >
+        Save SOAP Note
+      </button>
+    </form>
 
-      <p>{message}</p>
-    </div>
-  );
+    {message && (
+      <p style={{ marginTop: "20px", fontWeight: "bold" }}>
+        {message}
+      </p>
+    )}
+  </div>
+);
 }
 
 export default App;
